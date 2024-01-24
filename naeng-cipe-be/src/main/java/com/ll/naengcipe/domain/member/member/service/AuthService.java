@@ -22,15 +22,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public MemberResponseDto addMember(@Valid JoinRequestDto joinDto) {
+    public MemberResponseDto addMember(final JoinRequestDto joinDto) {
         MemberDto memberDto = MemberDto.builder()
                 .email(joinDto.getEmail())
-                .password(joinDto.getPassword())
+                .password(passwordEncoder.encode(joinDto.getPassword()))
                 .nickname(joinDto.getNickname())
                 .build();
 
-        MemberDto encodingMember = memberDto.toBuilder().password(passwordEncoder.encode(memberDto.getPassword())).build();
-        Member memberEntity = memberRepository.save(MemberDto.toEntity(encodingMember));
+        Member memberEntity = memberRepository.save(MemberDto.toEntity(memberDto));
 
         return new MemberResponseDto(new MemberDto(memberEntity));
     }
