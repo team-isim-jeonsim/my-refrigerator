@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.ll.naengcipe.domain.recipe.recipe.dto.QRecipeResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeResponseDto;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -25,16 +24,13 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 	public List<RecipeResponseDto> findRecipesByIngredients(List<Long> ingredients) {
 
 		return jpaQueryFactory.select(new QRecipeResponseDto(
-				recipe.id, recipe.title, member.nickname, recipe.createdDate
-			))
+				recipe.id, recipe.title, member.nickname, recipe.createdDate))
 			.from(recipe)
 			.leftJoin(recipe.member, member)
-			.where(recipe.id.in(
-				JPAExpressions.select(recipeIngredient.recipe.id)
-					.from(recipeIngredient)
-					.where(recipeIngredient.ingredient.id.in(ingredients))
-					.groupBy(recipeIngredient.recipe.id)
-					.having(recipeIngredient.ingredient.id.countDistinct().goe(ingredients.size()))
-			)).fetch();
+			.leftJoin(recipe.recipeIngredient, recipeIngredient)
+			.where(recipeIngredient.ingredient.id.in(ingredients))
+			.groupBy(recipe.id)
+			.having(recipeIngredient.ingredient.id.countDistinct().eq((long)ingredients.size()))
+			.fetch();
 	}
 }
