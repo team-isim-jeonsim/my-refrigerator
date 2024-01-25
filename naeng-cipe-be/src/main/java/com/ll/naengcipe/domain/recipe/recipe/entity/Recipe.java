@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -23,6 +24,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class Recipe extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -36,4 +38,6 @@ public class Recipe extends BaseEntity {
 	private List<RecipeIngredient> recipeIngredient = new ArrayList<>();
 	private String title;
 	private String content;
+	private String ingredients;
+	private String cookingOrder;
 }
