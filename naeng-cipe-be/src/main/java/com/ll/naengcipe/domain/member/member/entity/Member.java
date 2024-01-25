@@ -3,6 +3,7 @@ package com.ll.naengcipe.domain.member.member.entity;
 import com.ll.naengcipe.global.entity.BaseEntity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,8 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder(toBuilder = true)
 public class Member extends BaseEntity {
     @Id
