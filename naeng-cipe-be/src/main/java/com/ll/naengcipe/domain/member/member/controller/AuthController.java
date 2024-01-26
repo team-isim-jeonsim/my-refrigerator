@@ -1,6 +1,8 @@
 package com.ll.naengcipe.domain.member.member.controller;
 
 import com.ll.naengcipe.domain.member.member.dto.JoinRequestDto;
+import com.ll.naengcipe.domain.member.member.dto.LoginRequestDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
 import com.ll.naengcipe.domain.member.member.exception.PasswordNotMatchException;
 import com.ll.naengcipe.domain.member.member.service.AuthService;
 import jakarta.validation.Valid;
@@ -17,11 +19,18 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
+    @PostMapping("/login")
+    public ResponseEntity<?> memberLogin(@Valid @RequestBody LoginRequestDto loginDto) {
+        return ResponseEntity.ok(
+                authService.loginMember(loginDto)
+        );
+    }
+
     /**
      * 회원가입
      */
     @PostMapping("/join")
-    public ResponseEntity<?> memberAdd(@Valid @RequestBody JoinRequestDto joinDto) {
+    public ResponseEntity<MemberResponseDto> memberAdd(@Valid @RequestBody JoinRequestDto joinDto) {
         if (!joinDto.isPasswordCheck()) {
             throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
         }
