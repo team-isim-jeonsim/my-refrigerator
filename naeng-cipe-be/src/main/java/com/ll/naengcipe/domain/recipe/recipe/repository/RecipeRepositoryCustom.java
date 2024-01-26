@@ -12,5 +12,5 @@ import com.ll.naengcipe.domain.recipe.recipe.entity.Recipe;
 public interface RecipeRepositoryCustom {
 	List<RecipeResponseDto> findRecipesByIngredients(List<Long> ingredients);
 
-	Page<Recipe> findAllThroughSearch(Pageable pageable, RecipeSearchCondAndKeywordDto recipeSearchCond);
+	Page<RecipeResponseDto> findAllThroughSearch(Pageable pageable, RecipeSearchCondAndKeywordDto recipeSearchCond);
 }
