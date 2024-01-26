@@ -38,3 +38,4 @@ out/
 
 ### CUSTOM ###
 data/
+application-secret.yml
