@@ -2,8 +2,12 @@ package com.ll.naengcipe.domain.recipe.recipe.entity;
 
 import static jakarta.persistence.GenerationType.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.global.entity.BaseEntity;
@@ -40,4 +44,10 @@ public class Recipe extends BaseEntity {
 	private String content;
 	private String ingredients;
 	private String cookingOrder;
+	private String writer;
+	@CreatedDate
+	private LocalDateTime createdDate;
+	@LastModifiedDate
+	private LocalDateTime updatedDate;
+
 }

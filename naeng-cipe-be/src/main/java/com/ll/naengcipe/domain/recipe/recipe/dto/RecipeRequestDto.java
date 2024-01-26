@@ -15,9 +15,8 @@ import lombok.ToString;
 @ToString
 public class RecipeRequestDto {
 
-	private String title;
-	private String content;
-	private String ingredients;
-	private String cookingOrder;
+	private String title = "";
+	private String content = "";
+	private String ingredients = "";
+	private String cookingOrder = "";
 }
-

@@ -27,6 +27,13 @@ public class RecipeService {
 
 		return RecipeCreateDto.builder()
 			.Id(savedRecipe.getId())
+			.title(savedRecipe.getTitle())
+			.content(savedRecipe.getContent())
+			.ingredients(savedRecipe.getIngredients())
+			.cookingOrder(savedRecipe.getCookingOrder())
+			.writer(savedRecipe.getWriter())
+			.createdDate(savedRecipe.getCreatedDate())
+			.updatedDate(savedRecipe.getUpdatedDate())
 			.build();
 	}
 
