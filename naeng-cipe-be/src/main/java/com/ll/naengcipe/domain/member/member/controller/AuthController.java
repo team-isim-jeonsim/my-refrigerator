@@ -5,6 +5,7 @@ import com.ll.naengcipe.domain.member.member.dto.LoginRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
 import com.ll.naengcipe.domain.member.member.exception.PasswordNotMatchException;
 import com.ll.naengcipe.domain.member.member.service.AuthService;
+import com.ll.naengcipe.global.security.jwt.dto.JwtResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> memberLogin(@Valid @RequestBody LoginRequestDto loginDto) {
+    public ResponseEntity<JwtResponse> memberLogin(@Valid @RequestBody LoginRequestDto loginDto) {
         return ResponseEntity.ok(
                 authService.loginMember(loginDto)
         );
