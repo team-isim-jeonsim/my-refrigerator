@@ -8,7 +8,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 
 @Data
-public class RecipeResponseDto {
+public class RecipeSearchResponseDto {
 
 	private Long id;
 	private String title;
@@ -18,7 +18,7 @@ public class RecipeResponseDto {
 
 	//Todo: 레시피 이미지 작업
 	@QueryProjection //QueryDsl의 select에 new 연산자 사용하기 위함
-	public RecipeResponseDto(Long id, String title, String writer, LocalDateTime createdDate) {
+	public RecipeSearchResponseDto(Long id, String title, String writer, LocalDateTime createdDate) {
 		this.id = id;
 		this.title = title;
 		this.thumbnail = null;
@@ -27,7 +27,7 @@ public class RecipeResponseDto {
 	}
 
 	@QueryProjection //QueryDsl의 select에 new 연산자 사용하기 위함
-	public RecipeResponseDto(Long id, String title, String thumbnail, String writer, LocalDateTime createdDate) {
+	public RecipeSearchResponseDto(Long id, String title, String thumbnail, String writer, LocalDateTime createdDate) {
 		this.id = id;
 		this.title = title;
 		this.thumbnail = thumbnail;
@@ -36,7 +36,7 @@ public class RecipeResponseDto {
 	}
 
 	//Todo: 레시피 이미지 작업
-	public RecipeResponseDto(Recipe recipe) {
+	public RecipeSearchResponseDto(Recipe recipe) {
 		this.id = recipe.getId();
 		this.title = recipe.getTitle();
 		this.thumbnail = null;

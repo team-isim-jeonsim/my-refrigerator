@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
 
@@ -16,7 +16,7 @@ public class RecipeService {
 
 	private final RecipeRepository recipeRepository;
 
-	public Page<RecipeResponseDto> findRecipeList(Pageable pageable, RecipeSearchCondAndKeywordDto recipeSearchDto) {
+	public Page<RecipeSearchResponseDto> findRecipeList(Pageable pageable, RecipeSearchCondAndKeywordDto recipeSearchDto) {
 		return recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
 	}
 }
