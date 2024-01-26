@@ -15,12 +15,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "fridge_ingredient")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@EqualsAndHashCode(of = {"fridge", "ingredient"})
 public class FridgeIngredient {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
