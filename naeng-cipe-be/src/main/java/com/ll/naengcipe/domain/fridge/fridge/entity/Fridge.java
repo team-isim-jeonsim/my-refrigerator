@@ -42,7 +42,6 @@ public class Fridge {
 	private Set<FridgeIngredient> fridgeIngredients = new HashSet<>();
 
 	public void addIngredient(Ingredient ingredient) {
-
 		FridgeIngredient fridgeIngredient = FridgeIngredient.builder()
 			.fridge(this)
 			.ingredient(ingredient)
@@ -50,5 +49,15 @@ public class Fridge {
 			.build();
 
 		fridgeIngredients.add(fridgeIngredient);
+	}
+
+	public void removeIngredient(Ingredient ingredient) {
+		FridgeIngredient fridgeIngredient = FridgeIngredient.builder()
+			.fridge(this)
+			.ingredient(ingredient)
+			.createdDate(LocalDateTime.now())
+			.build();
+
+		fridgeIngredients.remove(fridgeIngredient);
 	}
 }

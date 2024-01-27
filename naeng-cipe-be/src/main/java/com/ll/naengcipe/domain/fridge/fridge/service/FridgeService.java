@@ -42,13 +42,27 @@ public class FridgeService {
 
 	@Transactional
 	public void addIngredient(Long ingredientId,Long userId) {
-
 		// 재료 찾기
 		Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
 
 		// 로그인 된 아이디의 냉장고 찾기
 		Fridge userFridge = findByUserId(userId);
 
+		if(userFridge == null){
+
+		}
+
 		userFridge.addIngredient(ingredient);
+	}
+
+	@Transactional
+	public void removeIngredient(Long ingredientId, Long userId) {
+		// 재료 찾기
+		Ingredient ingredient = ingredientRepository.findById(ingredientId).get();
+
+		// 로그인 된 아이디의 냉장고 찾기
+		Fridge userFridge = findByUserId(userId);
+
+		userFridge.removeIngredient(ingredient);
 	}
 }

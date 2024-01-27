@@ -1,7 +1,6 @@
 package com.ll.naengcipe.domain.member.member.service;
 
 import com.ll.naengcipe.domain.member.member.dto.JoinRequestDto;
-<<<<<<< HEAD
 import com.ll.naengcipe.domain.member.member.dto.LoginRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;

@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.naengcipe.domain.fridge.fridge.dto.FridgeResponseDto;
-import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.service.FridgeService;
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientDto;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.service.IngredientService;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeResponseDto;
-import com.ll.naengcipe.global.security.SecurityUser;
+import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,23 +40,20 @@ public class FridgeController {
 
 	@PostMapping("/ingredients/{ingredientId}")
 	public FridgeResponseDto addIngredient(@PathVariable("ingredientId") Long id,
-		@AuthenticationPrincipal SecurityUser user) {
+		@AuthenticationPrincipal UserPrincipal user) {
 
-		fridgeService.addIngredient(id, user.getId());
+		fridgeService.addIngredient(id, user.getMember().getId());
 
 		Ingredient ingredient = ingredientService.findById(id).get();
 
-		return new FridgeResponseDto(user.getId(), ingredient.getId(), ingredient.getName());
+		return new FridgeResponseDto(user.getMember().getId(), ingredient.getId(), ingredient.getName());
 	}
 
 	@DeleteMapping("/ingredients/{ingredientId}") // 데이터베이스에 있는 재료 삭제
 	public void removeIngredient(@PathVariable("ingredientId") Long id,
-		@AuthenticationPrincipal SecurityUser user) {
-		// 로그인 된 아이디 조회
-		Fridge userFridge = fridgeService.findByUserId(user.getId());
-		//재료 삭제
-		// userFridge.deleteIngredient(id);
+		@AuthenticationPrincipal UserPrincipal user) {
 
+		fridgeService.removeIngredient(id, user.getMember().getId());
 	}
 
 	@GetMapping("/recipes")
