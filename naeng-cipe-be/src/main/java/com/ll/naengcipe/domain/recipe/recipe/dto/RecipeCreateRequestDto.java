@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class RecipeRequestDto {
+public class RecipeCreateRequestDto {
 
 	private String title = "";
 	private String content = "";

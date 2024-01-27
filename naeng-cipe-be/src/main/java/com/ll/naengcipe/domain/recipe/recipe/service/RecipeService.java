@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeRequestDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateDto;
 import com.ll.naengcipe.domain.recipe.recipe.entity.Recipe;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
 
@@ -17,7 +18,7 @@ public class RecipeService {
 
 	private final RecipeRepository recipeRepository;
 
-	public RecipeCreateDto write(RecipeRequestDto requestDto) {
+	public RecipeCreateDto write(RecipeCreateRequestDto requestDto) {
 		Recipe recipe = Recipe.builder()
 			.title(requestDto.getTitle())
 			.content(requestDto.getContent())
@@ -37,5 +38,13 @@ public class RecipeService {
 			.createdDate(savedRecipe.getCreatedDate())
 			.updatedDate(savedRecipe.getUpdatedDate())
 			.build();
+	}
+
+	@Transactional
+	public void edit(Long id, RecipeUpdateDto recipeUpdateDto) {
+		Recipe recipe = recipeRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+		recipe.update(recipeUpdateDto);
 	}
 }

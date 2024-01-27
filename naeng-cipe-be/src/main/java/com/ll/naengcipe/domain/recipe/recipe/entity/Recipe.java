@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.ll.naengcipe.domain.member.member.entity.Member;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateDto;
 import com.ll.naengcipe.global.entity.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -49,4 +50,13 @@ public class Recipe extends BaseEntity {
 	private LocalDateTime createdDate;
 	@LastModifiedDate
 	private LocalDateTime updatedDate;
+
+	public void update(RecipeUpdateDto recipeUpdateDto) {
+		this.title = recipeUpdateDto.getTitle();
+		this.content = recipeUpdateDto.getContent();
+		this.ingredients = recipeUpdateDto.getIngredients();
+		this.cookingOrder = recipeUpdateDto.getCookingOrder();
+	}
 }
+
+
