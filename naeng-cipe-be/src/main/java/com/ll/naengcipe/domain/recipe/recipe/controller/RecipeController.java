@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,5 +46,12 @@ public class RecipeController {
 	public ResponseEntity<?> updateRecipe(@PathVariable Long recipeId, @RequestBody RecipeUpdateDto recipeUpdateDto) {
 		recipeService.edit(recipeId, recipeUpdateDto);
 		return ResponseEntity.ok().build();
+	}
+
+	@DeleteMapping("/{recipeId}")
+	public ResponseEntity<?> deleteRecipe(@PathVariable Long recipeId) {
+		recipeService.delete(recipeId);
+
+		return ResponseEntity.noContent().build();
 	}
 }

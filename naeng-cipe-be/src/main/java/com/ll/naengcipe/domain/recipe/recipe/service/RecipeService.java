@@ -47,4 +47,11 @@ public class RecipeService {
 
 		recipe.update(recipeUpdateDto);
 	}
+
+	public void delete(Long id) {
+		Recipe recipe = recipeRepository.findById(id)
+			.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+
+		recipeRepository.delete(recipe);
+	}
 }
