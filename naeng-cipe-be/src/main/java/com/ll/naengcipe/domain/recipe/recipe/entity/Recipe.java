@@ -16,11 +16,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @SuperBuilder(toBuilder = true)
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe extends BaseEntity {
@@ -37,3 +39,4 @@ public class Recipe extends BaseEntity {
 	private String title;
 	private String content;
 }
+

@@ -22,6 +22,11 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
+jwt:
+  secret-key: kwed41235fwQRhplASerfdghjiokt2ASFAWgpw5sdFEWYGsgd8wqe0ig40f2RpyuikfdltERT340huj20tsdFKsdalg211rESF4w0dgstkgDAjuIw4egd235dfRptkdSDdfgewf14FKsdalgw0tgkwhskQKrcpoiyltikeujlspE3lqd00w7h11RKxekdltERT341rESF0tsd237dk3rFAWgpe0ig4kkgDAjuIwewi238tu8wjsSDF30djgj92ksdk3oAGRHdhd2dnY64t6FGDSs2
+  access-token-expiration-msec: 1800000 # 30분
+  refresh-token-expiration-msec: 2592000000 # 30일
+
 logging:
   level:
     org:
