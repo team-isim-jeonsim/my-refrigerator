@@ -1,57 +1,56 @@
 package com.ll.naengcipe.domain.recipe.recipe.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateDto;
+import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
+import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
+import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
+import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.entity.Recipe;
+import com.ll.naengcipe.domain.recipe.recipe.entity.RecipeIngredient;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-
+@Transactional(readOnly = true)
+@Slf4j
 public class RecipeService {
 
 	private final RecipeRepository recipeRepository;
-
-	public RecipeCreateDto write(RecipeCreateRequestDto requestDto) {
-		Recipe recipe = Recipe.builder()
-			.title(requestDto.getTitle())
-			.content(requestDto.getContent())
-			.ingredients(requestDto.getIngredients())
-			.cookingOrder(requestDto.getCookingOrder())
-			.build();
-
-		Recipe savedRecipe = recipeRepository.save(recipe);
-
-		return RecipeCreateDto.builder()
-			.id(savedRecipe.getId())
-			.title(savedRecipe.getTitle())
-			.content(savedRecipe.getContent())
-			.ingredients(savedRecipe.getIngredients())
-			.cookingOrder(savedRecipe.getCookingOrder())
-			.writer(savedRecipe.getWriter())
-			.createdDate(savedRecipe.getCreatedDate())
-			.updatedDate(savedRecipe.getUpdatedDate())
-			.build();
-	}
+	private final IngredientRepository ingredientRepository;
 
 	@Transactional
-	public void edit(Long id, RecipeUpdateDto recipeUpdateDto) {
-		Recipe recipe = recipeRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+	public RecipeCreateResponseDto addRecipe(Member member, RecipeCreateRequestDto recipeCreateDto) {
 
-		recipe.update(recipeUpdateDto);
+		List<Ingredient> ingredients = ingredientRepository.findByIdIn(recipeCreateDto.getIngredients());
+		if (ingredientNotExist(recipeCreateDto.getIngredients().size(), ingredients.size())) {
+			throw new IngredientNotExistException("해당 재료가 존재하지 않습니다.");
+		}
+
+		List<RecipeIngredient> recipeIngredients = new ArrayList<>();
+		for (Ingredient ingredient : ingredients) {
+			recipeIngredients.add(new RecipeIngredient(ingredient));
+		}
+
+		Recipe recipe = Recipe.createRecipe(member, recipeCreateDto.getTitle(), recipeCreateDto.getContent(),
+			recipeIngredients);
+		Recipe savedRecipe = recipeRepository.save(recipe);
+
+		return RecipeCreateResponseDto.toDto(savedRecipe);
 	}
 
-	public void delete(Long id) {
-		Recipe recipe = recipeRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("존재하지 않는 게시글입니다."));
+	private boolean
+	ingredientNotExist(int requestIngredientSize, int size) {
 
-		recipeRepository.delete(recipe);
+		return size != requestIngredientSize;
 	}
 }

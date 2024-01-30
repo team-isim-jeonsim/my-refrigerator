@@ -2,17 +2,13 @@ package com.ll.naengcipe.domain.recipe.recipe.entity;
 
 import static jakarta.persistence.GenerationType.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import com.ll.naengcipe.domain.member.member.entity.Member;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateDto;
 import com.ll.naengcipe.global.entity.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,24 +35,31 @@ public class Recipe extends BaseEntity {
 	@JoinColumn(name = "member_id")
 	private Member member;
 
-	@OneToMany(mappedBy = "recipe")
+	@OneToMany(mappedBy = "recipe", cascade = CascadeType.PERSIST)
 	private List<RecipeIngredient> recipeIngredient = new ArrayList<>();
 	private String title;
 	private String content;
-	private String ingredients;
-	private String cookingOrder;
-	private String writer;
-	@CreatedDate
-	private LocalDateTime createdDate;
-	@LastModifiedDate
-	private LocalDateTime updatedDate;
 
-	public void update(RecipeUpdateDto recipeUpdateDto) {
-		this.title = recipeUpdateDto.getTitle();
-		this.content = recipeUpdateDto.getContent();
-		this.ingredients = recipeUpdateDto.getIngredients();
-		this.cookingOrder = recipeUpdateDto.getCookingOrder();
+	protected Recipe(Member member, String title, String content) {
+		this.member = member;
+		this.title = title;
+		this.content = content;
+	}
+
+	//생성메서드
+	public static Recipe createRecipe(Member member, String title, String content,
+		List<RecipeIngredient> recipeIngredients) {
+		Recipe recipe = new Recipe(member, title, content);
+
+		for (RecipeIngredient recipeIngredient : recipeIngredients) {
+			recipe.addRecipeIngredient(recipeIngredient);
+		}
+
+		return recipe;
+	}
+
+	private void addRecipeIngredient(RecipeIngredient recipeIngredient) {
+		recipeIngredient.addRecipe(this);
+		this.recipeIngredient.add(recipeIngredient);
 	}
 }
-
-
