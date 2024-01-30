@@ -24,7 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Map;
 
 @Slf4j
@@ -34,15 +33,14 @@ import java.util.Map;
 public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final AuthenticationManager authenticationManager;
-
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtRefreshTokenRepository refreshTokenRepository;
 
     /**
      * 회원가입
      */
+
     @Transactional
     public MemberResponseDto addMember(final JoinRequestDto joinDto) {
         MemberDto memberDto = MemberDto.builder()
