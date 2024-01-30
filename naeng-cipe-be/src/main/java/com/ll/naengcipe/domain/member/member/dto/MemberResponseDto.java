@@ -1,26 +1,28 @@
 package com.ll.naengcipe.domain.member.member.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class MemberResponseDto {
-    private Long id;
-    private String email;
-    private String nickname;
-    private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
+	private Long id;
+	private String email;
+	private String nickname;
+	private LocalDateTime createdDate;
+	private LocalDateTime updatedDate;
 
-    public MemberResponseDto(MemberDto dto) {
-        this.id = dto.getId();
-        this.email = dto.getEmail();
-        this.nickname = dto.getNickname();
-        this.createdDate = dto.getCreatedDate();
-        this.updatedDate = dto.getUpdatedDate();
-    }
+	public static MemberResponseDto of(MemberDto memberDto) {
+		return MemberResponseDto.builder()
+			.id(memberDto.getId())
+			.email(memberDto.getEmail())
+			.nickname(memberDto.getNickname())
+			.createdDate(memberDto.getCreatedDate())
+			.updatedDate(memberDto.getUpdatedDate())
+			.build();
+	}
 }

@@ -23,8 +23,8 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 	@Override
 	public List<RecipeResponseDto> findRecipesByIngredients(List<Long> ingredients) {
 
-		return jpaQueryFactory.select(new QRecipeResponseDto(
-				recipe.id, recipe.title, member.nickname, recipe.createdDate))
+		return jpaQueryFactory.select(
+				new QRecipeResponseDto(recipe.id, recipe.title, member.nickname, recipe.createdDate))
 			.from(recipe)
 			.leftJoin(recipe.member, member)
 			.leftJoin(recipe.recipeIngredient, recipeIngredient)
