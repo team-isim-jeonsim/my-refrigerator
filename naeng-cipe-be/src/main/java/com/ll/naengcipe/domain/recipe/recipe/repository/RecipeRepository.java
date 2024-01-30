@@ -18,4 +18,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>, RecipeRep
 
 	@Query("select r from Recipe r left join fetch r.recipeIngredient ri where r.id = :recipeId")
 	Optional<Recipe> findByIdWithRecipeIngredient(Long recipeId);
+
+	@EntityGraph(attributePaths = "member")
+	@Query("select r from Recipe r where r.id = :recipeId")
+	Recipe findByIdWithMember(Long recipeId);
 }

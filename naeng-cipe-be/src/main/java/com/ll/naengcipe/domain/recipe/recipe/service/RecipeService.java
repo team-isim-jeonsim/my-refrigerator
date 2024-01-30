@@ -89,4 +89,18 @@ public class RecipeService {
 
 		return size != requestIngredientSize;
 	}
+
+	@Transactional
+	public void removeRecipe(Member member, Long recipeId) {
+
+		Recipe foundRecipe = recipeRepository.findByIdWithMember(recipeId);
+		log.info("removeRecipe={}", foundRecipe);
+
+		//레시피 작성자와 요청자가 다르면 예외처리
+		if (!foundRecipe.getMember().getId().equals(member.getId())) {
+			throw new UserAndWriterNotMatchException("해당 레시피에 대한 삭제 권한이 없습니다.");
+		}
+
+		recipeRepository.delete(foundRecipe);
+	}
 }
