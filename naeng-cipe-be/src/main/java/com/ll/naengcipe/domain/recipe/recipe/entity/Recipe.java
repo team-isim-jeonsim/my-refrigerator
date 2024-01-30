@@ -62,4 +62,14 @@ public class Recipe extends BaseEntity {
 		recipeIngredient.addRecipe(this);
 		this.recipeIngredient.add(recipeIngredient);
 	}
+
+	public void change(Member member, String title, String content, List<RecipeIngredient> recipeIngredients) {
+		this.member = member;
+		this.title = title;
+		this.content = content;
+		this.recipeIngredient = new ArrayList<>();
+		for (RecipeIngredient recipeIngredient : recipeIngredients) {
+			this.addRecipeIngredient(recipeIngredient);
+		}
+	}
 }
