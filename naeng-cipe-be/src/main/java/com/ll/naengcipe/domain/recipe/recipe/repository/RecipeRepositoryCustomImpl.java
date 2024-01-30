@@ -12,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
-import com.ll.naengcipe.domain.recipe.recipe.dto.QRecipeResponseDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.QRecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCond;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -36,7 +36,7 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 	@Override
 	public List<RecipeSearchResponseDto> findRecipesByIngredients(List<Long> ingredients) {
 
-		return jpaQueryFactory.select(new QRecipeResponseDto(
+		return jpaQueryFactory.select(new QRecipeSearchResponseDto(
 				recipe.id, recipe.title, member.nickname, recipe.createdDate))
 			.from(recipe)
 			.leftJoin(recipe.member, member)
@@ -64,7 +64,7 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 			}
 		}
 
-		JPAQuery<RecipeSearchResponseDto> query = jpaQueryFactory.select(new QRecipeResponseDto(
+		JPAQuery<RecipeSearchResponseDto> query = jpaQueryFactory.select(new QRecipeSearchResponseDto(
 				recipe.id, recipe.title, member.nickname, recipe.createdDate))
 			.from(recipe)
 			.leftJoin(recipe.member, member)
