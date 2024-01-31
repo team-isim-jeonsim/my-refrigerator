@@ -11,7 +11,6 @@ import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeIngredientReposito
 import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeRepository;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
 
@@ -25,7 +24,6 @@ public class FridgeService {
 	private final RecipeRepository recipeRepository;
 	private final FridgeRepository fridgeRepository;
 	private final IngredientRepository ingredientRepository;
-	private final FridgeIngredientRepository fridgeIngredientRepository;
 
 	public Fridge findByUserId(Long id) {
 		return fridgeRepository.findByMemberId(id);
@@ -60,7 +58,6 @@ public class FridgeService {
 	}
 
 	public List<RecipeSearchResponseDto> findRecipesContainIngredients(List<Long> ingredients) {
-
 		return recipeRepository.findRecipesByIngredients(ingredients);
 	}
 }

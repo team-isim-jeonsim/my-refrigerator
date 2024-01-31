@@ -1,28 +1,5 @@
 package com.ll.naengcipe.domain.member.member.service;
 
-import com.ll.naengcipe.domain.member.member.dto.JoinRequestDto;
-import com.ll.naengcipe.domain.member.member.dto.LoginRequestDto;
-import com.ll.naengcipe.domain.member.member.dto.MemberDto;
-import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
-import com.ll.naengcipe.domain.member.member.entity.Member;
-import com.ll.naengcipe.domain.member.member.exception.InvalidTokenException;
-import com.ll.naengcipe.domain.member.member.exception.JwtRefreshTokenNotFoundException;
-import com.ll.naengcipe.domain.member.member.exception.PasswordNotMatchException;
-import com.ll.naengcipe.domain.member.member.exception.UserNotFoundException;
-import com.ll.naengcipe.domain.member.member.repository.MemberRepository;
-import com.ll.naengcipe.global.security.jwt.JwtTokenProvider;
-import com.ll.naengcipe.global.security.jwt.dto.JwtResponse;
-import com.ll.naengcipe.global.security.jwt.entity.JwtRefreshToken;
-import com.ll.naengcipe.global.security.jwt.repository.JwtRefreshTokenRepository;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,7 +8,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
+import com.ll.naengcipe.domain.member.member.dto.JoinRequestDto;
+import com.ll.naengcipe.domain.member.member.dto.LoginRequestDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
+import com.ll.naengcipe.domain.member.member.entity.Member;
+import com.ll.naengcipe.domain.member.member.exception.InvalidTokenException;
+import com.ll.naengcipe.domain.member.member.exception.UserNotFoundException;
+import com.ll.naengcipe.domain.member.member.repository.MemberRepository;
+import com.ll.naengcipe.global.security.jwt.JwtTokenProvider;
+import com.ll.naengcipe.global.security.jwt.dto.JwtResponse;
+import com.ll.naengcipe.global.security.jwt.entity.JwtRefreshToken;
+import com.ll.naengcipe.global.security.jwt.repository.JwtRefreshTokenRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -49,7 +40,6 @@ public class AuthService {
 	 */
 
 	@Transactional
-
 	public MemberResponseDto addMember(final JoinRequestDto joinDto) {
 		MemberDto memberDto = MemberDto.builder()
 			.email(joinDto.getEmail())
