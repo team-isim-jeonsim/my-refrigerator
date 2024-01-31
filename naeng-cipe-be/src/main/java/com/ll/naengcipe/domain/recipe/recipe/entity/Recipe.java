@@ -23,6 +23,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @SuperBuilder(toBuilder = true)
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -73,3 +74,4 @@ public class Recipe extends BaseEntity {
 		}
 	}
 }
+

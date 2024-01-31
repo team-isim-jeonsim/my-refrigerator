@@ -2,9 +2,12 @@ package com.ll.naengcipe.domain.recipe.recipe.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
 
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
@@ -13,6 +16,7 @@ import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.member.member.exception.UserAndWriterNotMatchException;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.entity.Recipe;
@@ -102,5 +106,28 @@ public class RecipeService {
 		}
 
 		recipeRepository.delete(foundRecipe);
+	}
+
+	public RecipeInfoResponseDto findRecipe(Long recipeId) {
+		// 1. 레시피 아이디가 유효한 아이디인지 확인
+		Recipe recipe = recipeRepository.findByIdWithRecipeIngredient(recipeId)
+			.orElseThrow(() -> new RecipeNotFoundException("해당 재료를 찾을 수 없습니다."));
+
+		List<RecipeIngredient> recipeIngredients = recipe.getRecipeIngredient();
+		List<IngredientResponseDto> IngredientDtos = recipeIngredients.stream()
+			.map(ri -> IngredientResponseDto.toDto(ri.getIngredient()))
+			.collect(Collectors.toList());
+
+		// 2. 유효한 아이디일 경우 레시피 정보 조회
+		RecipeInfoResponseDto recipeInfoResponseDto = new RecipeInfoResponseDto();
+		recipeInfoResponseDto.setId(recipe.getId());
+		recipeInfoResponseDto.setTitle(recipe.getTitle());
+		recipeInfoResponseDto.setContent(recipe.getContent());
+		recipeInfoResponseDto.setIngredients(IngredientDtos);
+		recipeInfoResponseDto.setWriter(recipe.getMember().getNickname());
+		recipeInfoResponseDto.setCreatedDate(recipe.getCreatedDate());
+		recipeInfoResponseDto.setUpdateDate(recipe.getUpdatedDate());
+
+		return recipeInfoResponseDto;
 	}
 }

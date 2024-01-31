@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.service.RecipeService;
@@ -56,5 +58,11 @@ public class RecipeController {
 		recipeService.removeRecipe(user.getMember(), recipeId);
 
 		return ResponseEntity.ok(null);
+	}
+
+
+	@GetMapping("/api/recipes/{recipeId}")
+	public ResponseEntity<RecipeInfoResponseDto> recipeDetails(@PathVariable Long recipeId) {
+		return ResponseEntity.status(HttpStatus.OK).body(recipeService.findRecipe(recipeId));
 	}
 }
