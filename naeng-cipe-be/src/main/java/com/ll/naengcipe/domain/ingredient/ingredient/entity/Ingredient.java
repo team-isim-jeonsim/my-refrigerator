@@ -1,5 +1,7 @@
 package com.ll.naengcipe.domain.ingredient.ingredient.entity;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

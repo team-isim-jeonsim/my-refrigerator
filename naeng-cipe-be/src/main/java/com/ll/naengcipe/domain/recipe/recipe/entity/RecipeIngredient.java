@@ -12,12 +12,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "recipe_ingredient")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class RecipeIngredient {
 
 	@Id
@@ -32,4 +34,11 @@ public class RecipeIngredient {
 	@JoinColumn(name = "ingredient_id")
 	private Ingredient ingredient;
 
+	public RecipeIngredient(Ingredient ingredient) {
+		this.ingredient = ingredient;
+	}
+
+	public void addRecipe(Recipe recipe) {
+		this.recipe = recipe;
+	}
 }

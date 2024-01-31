@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.service.FridgeService;
 import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.ll.naengcipe.domain.member.member.dto.MemberDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
+import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.member.member.service.MemberService;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
 
@@ -34,5 +41,17 @@ public class MemberController {
 		Fridge fridgeEntity = fridgeService.findByUserId(memberResponseDto.getId());
 
 		return ResponseEntity.ok(memberService.findMyFridge(fridgeEntity));
+	}
+
+	@GetMapping("/{memberId}")
+	public MemberDto memberDetails(@AuthenticationPrincipal UserPrincipal user) {
+		Member member = user.getMember();
+		return new MemberDto(member);
+	}
+
+	@PatchMapping("/{memberId}")
+	public MemberModifyResponseDto memberModify(@AuthenticationPrincipal UserPrincipal user,
+		@RequestBody MemberModifyRequestDto memberModifyRequestDto) {
+		return memberService.modifyMember(user, memberModifyRequestDto);
 	}
 }
