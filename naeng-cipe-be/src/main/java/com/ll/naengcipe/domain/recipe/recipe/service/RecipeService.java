@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
+
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
@@ -106,6 +107,7 @@ public class RecipeService {
 
 		recipeRepository.delete(foundRecipe);
 	}
+
 	public RecipeInfoResponseDto findRecipe(Long recipeId) {
 		// 1. 레시피 아이디가 유효한 아이디인지 확인
 		Recipe recipe = recipeRepository.findByIdWithRecipeIngredient(recipeId)

@@ -60,6 +60,7 @@ public class RecipeController {
 		return ResponseEntity.ok(null);
 	}
 
+
 	@GetMapping("/api/recipes/{recipeId}")
 	public ResponseEntity<RecipeInfoResponseDto> recipeDetails(@PathVariable Long recipeId) {
 		return ResponseEntity.status(HttpStatus.OK).body(recipeService.findRecipe(recipeId));
