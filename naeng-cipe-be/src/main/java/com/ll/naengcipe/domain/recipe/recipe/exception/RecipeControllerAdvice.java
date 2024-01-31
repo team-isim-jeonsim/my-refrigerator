@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class RecipeControllerAdvice {
 
-	@ExceptionHandler(RecipeException.class)
+	@ExceptionHandler(RecipeNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResponseEntity<String> recipeException(RecipeException e) {
+	public ResponseEntity<String> recipeException(RecipeNotFoundException e) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
 
