@@ -1,7 +1,5 @@
 package com.ll.naengcipe.global.security.config;
 
-import com.ll.naengcipe.global.security.jwt.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,48 +16,54 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import com.ll.naengcipe.global.security.jwt.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvcRequestMatcher) throws Exception {
-        http
-                .cors(cors -> cors.configure(http))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers(mvcRequestMatcher.pattern("/**"))
-                        .permitAll()
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvcRequestMatcher) throws
+		Exception {
+		http
+			.cors(cors -> cors.configure(http))
+			.csrf(AbstractHttpConfigurer::disable)
+			.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+				.requestMatchers(mvcRequestMatcher.pattern("/**"))
+				.permitAll()
+			)
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+		return http.build();
+	}
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers(new AntPathRequestMatcher("/h2-console/**"))
-                .requestMatchers(new AntPathRequestMatcher("/favicon.ico"))
-                .requestMatchers(new AntPathRequestMatcher("/css/**"))
-                .requestMatchers(new AntPathRequestMatcher("/js/**"))
-                .requestMatchers(new AntPathRequestMatcher("/img/**"))
-                .requestMatchers(new AntPathRequestMatcher("/lib/**"));
-    }
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring()
+			.requestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+			.requestMatchers(new AntPathRequestMatcher("/favicon.ico"))
+			.requestMatchers(new AntPathRequestMatcher("/css/**"))
+			.requestMatchers(new AntPathRequestMatcher("/js/**"))
+			.requestMatchers(new AntPathRequestMatcher("/img/**"))
+			.requestMatchers(new AntPathRequestMatcher("/lib/**"));
+	}
 
-    @Bean
-    protected MvcRequestMatcher.Builder mvcRequestMatcherBuilder(HandlerMappingIntrospector introspect) {
-        return new MvcRequestMatcher.Builder(introspect);
-    }
+	@Bean
+	protected MvcRequestMatcher.Builder mvcRequestMatcherBuilder(HandlerMappingIntrospector introspect) {
+		return new MvcRequestMatcher.Builder(introspect);
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws
+		Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 }

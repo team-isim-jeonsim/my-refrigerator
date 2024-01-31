@@ -26,7 +26,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class Recipe extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

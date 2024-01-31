@@ -9,6 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
+import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
@@ -129,5 +139,10 @@ public class RecipeService {
 		recipeInfoResponseDto.setUpdateDate(recipe.getUpdatedDate());
 
 		return recipeInfoResponseDto;
+	}
+
+	public Page<RecipeSearchResponseDto> findRecipeList(Pageable pageable, RecipeSearchCondAndKeywordDto
+		recipeSearchDto) {
+		return recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
 	}
 }

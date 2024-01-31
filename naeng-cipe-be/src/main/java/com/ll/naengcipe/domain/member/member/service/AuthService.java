@@ -14,9 +14,15 @@ import com.ll.naengcipe.global.security.jwt.JwtTokenProvider;
 import com.ll.naengcipe.global.security.jwt.dto.JwtResponse;
 import com.ll.naengcipe.global.security.jwt.entity.JwtRefreshToken;
 import com.ll.naengcipe.global.security.jwt.repository.JwtRefreshTokenRepository;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Map;
 
 @Slf4j
@@ -31,135 +38,136 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
-    private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final JwtRefreshTokenRepository refreshTokenRepository;
+	private final MemberRepository memberRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtRefreshTokenRepository refreshTokenRepository;
 
-    /**
-     * 회원가입
-     */
+	/**
+	 * 회원가입
+	 */
 
-    @Transactional
-    public MemberResponseDto addMember(final JoinRequestDto joinDto) {
-        MemberDto memberDto = MemberDto.builder()
-                .email(joinDto.getEmail())
-                .password(passwordEncoder.encode(joinDto.getPassword()))
-                .nickname(joinDto.getNickname())
-                .build();
+	@Transactional
 
-        Member memberEntity = memberRepository.save(MemberDto.toEntity(memberDto));
+	public MemberResponseDto addMember(final JoinRequestDto joinDto) {
+		MemberDto memberDto = MemberDto.builder()
+			.email(joinDto.getEmail())
+			.password(passwordEncoder.encode(joinDto.getPassword()))
+			.nickname(joinDto.getNickname())
+			.build();
 
-        return new MemberResponseDto(new MemberDto(memberEntity));
-    }
+		Member memberEntity = memberRepository.save(MemberDto.toEntity(memberDto));
 
-    /**
-     * 로그인
-     */
-    @Transactional
-    public JwtResponse loginMember(final LoginRequestDto loginDto) {
-        Member memberEntity = Member.builder()
-                .email(loginDto.getEmail())
-                .password(loginDto.getPassword())
-                .build();
+		return new MemberResponseDto(new MemberDto(memberEntity));
+	}
 
-        Authentication authentication = authenticateMember(memberEntity);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+	/**
+	 * 로그인
+	 */
+	@Transactional
+	public JwtResponse loginMember(final LoginRequestDto loginDto) {
+		Member memberEntity = Member.builder()
+			.email(loginDto.getEmail())
+			.password(loginDto.getPassword())
+			.build();
 
-        JwtResponse jwtResponse = jwtTokenProvider.createAccessToken(authentication);
-        JwtRefreshToken refreshToken = checkAndCreateRefreshToken(authentication);
+		Authentication authentication = authenticateMember(memberEntity);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return buildJwtResponse(refreshToken, refreshToken.getMember(), jwtResponse);
-    }
+		JwtResponse jwtResponse = jwtTokenProvider.createAccessToken(authentication);
+		JwtRefreshToken refreshToken = checkAndCreateRefreshToken(authentication);
 
-    private Authentication authenticateMember(final Member member) {
-        return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        member.getEmail(), member.getPassword()
-                )
-        );
-    }
+		return buildJwtResponse(refreshToken, refreshToken.getMember(), jwtResponse);
+	}
 
-    // 리프레시 토큰이 있는지 확인, 없으면 생성
-    @Transactional
-    protected JwtRefreshToken checkAndCreateRefreshToken(final Authentication authentication) {
-        // 사용자 조회
-        Member authenticateMember = findMember(authentication.getName());
+	private Authentication authenticateMember(final Member member) {
+		return authenticationManager.authenticate(
+			new UsernamePasswordAuthenticationToken(
+				member.getEmail(), member.getPassword()
+			)
+		);
+	}
 
-        // 리프레시 토큰 조회
-        JwtRefreshToken refreshToken = findRefreshToken(authenticateMember);
+	// 리프레시 토큰이 있는지 확인, 없으면 생성
+	@Transactional
+	protected JwtRefreshToken checkAndCreateRefreshToken(final Authentication authentication) {
+		// 사용자 조회
+		Member authenticateMember = findMember(authentication.getName());
 
-        // 리프레시 토큰 검증 및 생성
-        refreshToken = validateAndCreateRefreshToken(authentication, authenticateMember, refreshToken);
+		// 리프레시 토큰 조회
+		JwtRefreshToken refreshToken = findRefreshToken(authenticateMember);
 
-        return refreshToken;
-    }
+		// 리프레시 토큰 검증 및 생성
+		refreshToken = validateAndCreateRefreshToken(authentication, authenticateMember, refreshToken);
 
-    // 새로운 액세스 토큰 발급
-    public JwtResponse newAccessToken(final String requestRefreshToken) {
-        validateRefreshToken(requestRefreshToken);
+		return refreshToken;
+	}
 
-        Authentication authentication = jwtTokenProvider.getAuthentication(requestRefreshToken);
-        Member member = findMember(authentication.getName());
-        JwtRefreshToken refreshToken = findRefreshToken(member);
+	// 새로운 액세스 토큰 발급
+	public JwtResponse newAccessToken(final String requestRefreshToken) {
+		validateRefreshToken(requestRefreshToken);
 
-        validateTokenMatch(requestRefreshToken, refreshToken);
+		Authentication authentication = jwtTokenProvider.getAuthentication(requestRefreshToken);
+		Member member = findMember(authentication.getName());
+		JwtRefreshToken refreshToken = findRefreshToken(member);
 
-        JwtResponse jwtResponse = jwtTokenProvider.createAccessToken(authentication);
+		validateTokenMatch(requestRefreshToken, refreshToken);
 
-        return buildJwtResponse(refreshToken, member, jwtResponse);
-    }
+		JwtResponse jwtResponse = jwtTokenProvider.createAccessToken(authentication);
 
-    private void validateRefreshToken(final String requestRefreshToken) {
-        if (!jwtTokenProvider.validateToken(requestRefreshToken)) {
-            throw new InvalidTokenException("Refresh Token 검증 실패");
-        }
-    }
+		return buildJwtResponse(refreshToken, member, jwtResponse);
+	}
 
-    private JwtRefreshToken findRefreshToken(final Member authenticateMember) {
-        return refreshTokenRepository.findByMember_Id(authenticateMember.getId()).orElse(null);
-    }
+	private void validateRefreshToken(final String requestRefreshToken) {
+		if (!jwtTokenProvider.validateToken(requestRefreshToken)) {
+			throw new InvalidTokenException("Refresh Token 검증 실패");
+		}
+	}
 
-    private void validateTokenMatch(final String requestRefreshToken, JwtRefreshToken refreshToken) {
-        if (!refreshToken.getRefreshToken().equals(requestRefreshToken)) {
-            throw new InvalidTokenException("토큰이 일치하지 않습니다.");
-        }
-    }
+	private JwtRefreshToken findRefreshToken(final Member authenticateMember) {
+		return refreshTokenRepository.findByMember_Id(authenticateMember.getId()).orElse(null);
+	}
 
-    private JwtRefreshToken validateAndCreateRefreshToken(final Authentication authentication,
-                                                          final Member authenticateMember,
-                                                          JwtRefreshToken refreshToken) {
-        if (isTokenInvalid(refreshToken)) {
-            refreshToken = recreateAndSaveRefreshToken(authentication, authenticateMember);
-        }
+	private void validateTokenMatch(final String requestRefreshToken, JwtRefreshToken refreshToken) {
+		if (!refreshToken.getRefreshToken().equals(requestRefreshToken)) {
+			throw new InvalidTokenException("토큰이 일치하지 않습니다.");
+		}
+	}
 
-        return refreshToken;
-    }
+	private JwtRefreshToken validateAndCreateRefreshToken(final Authentication authentication,
+		final Member authenticateMember,
+		JwtRefreshToken refreshToken) {
+		if (isTokenInvalid(refreshToken)) {
+			refreshToken = recreateAndSaveRefreshToken(authentication, authenticateMember);
+		}
 
-    private boolean isTokenInvalid(final JwtRefreshToken refreshToken) {
-        return refreshToken == null || !jwtTokenProvider.validateToken(refreshToken.getRefreshToken());
-    }
+		return refreshToken;
+	}
 
-    private JwtRefreshToken recreateAndSaveRefreshToken(final Authentication authentication,
-                                                        final Member authenticateMember) {
-        log.info("유효하지 않을 때");
+	private boolean isTokenInvalid(final JwtRefreshToken refreshToken) {
+		return refreshToken == null || !jwtTokenProvider.validateToken(refreshToken.getRefreshToken());
+	}
 
-        JwtRefreshToken newRefreshToken = jwtTokenProvider.createRefreshToken(authentication);
-        return refreshTokenRepository.save(newRefreshToken.toBuilder().member(authenticateMember).build());
-    }
+	private JwtRefreshToken recreateAndSaveRefreshToken(final Authentication authentication,
+		final Member authenticateMember) {
+		log.info("유효하지 않을 때");
 
-    private JwtResponse buildJwtResponse(final JwtRefreshToken refreshToken,
-                                         final Member member,
-                                         final JwtResponse jwtResponse) {
-        return jwtResponse.toBuilder()
-                .refreshToken(refreshToken.getRefreshToken())
-                .member(new MemberResponseDto(new MemberDto(member)))
-                .build();
-    }
+		JwtRefreshToken newRefreshToken = jwtTokenProvider.createRefreshToken(authentication);
+		return refreshTokenRepository.save(newRefreshToken.toBuilder().member(authenticateMember).build());
+	}
 
-    private Member findMember(final String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("회원을 찾을 수 없어요."));
-    }
+	private JwtResponse buildJwtResponse(final JwtRefreshToken refreshToken,
+		final Member member,
+		final JwtResponse jwtResponse) {
+		return jwtResponse.toBuilder()
+			.refreshToken(refreshToken.getRefreshToken())
+			.member(new MemberResponseDto(new MemberDto(member)))
+			.build();
+	}
+
+	private Member findMember(final String email) {
+		return memberRepository.findByEmail(email)
+			.orElseThrow(() -> new UserNotFoundException("회원을 찾을 수 없어요."));
+	}
 }

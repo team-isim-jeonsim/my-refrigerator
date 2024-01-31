@@ -16,6 +16,7 @@ import com.ll.naengcipe.domain.fridge.fridge.service.FridgeService;
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientDto;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.service.IngredientService;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeResponseDto;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
 
@@ -57,7 +58,7 @@ public class FridgeController {
 	}
 
 	@GetMapping("/recipes")
-	public List<RecipeResponseDto> fridgeRecipeList(@RequestParam("ingredient") List<Long> ingredients) {
+	public List<RecipeSearchResponseDto> fridgeRecipeList(@RequestParam("ingredient") List<Long> ingredients) {
 
 		//Todo: 해당 재료가 없는 경우, 예외 처리
 
