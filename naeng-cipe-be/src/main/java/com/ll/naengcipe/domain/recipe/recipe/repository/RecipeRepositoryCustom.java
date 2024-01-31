@@ -5,11 +5,12 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 
 public interface RecipeRepositoryCustom {
 	List<RecipeSearchResponseDto> findRecipesByIngredients(List<Long> ingredients);
 
-	Page<RecipeSearchResponseDto> findAllThroughSearch(Pageable pageable, RecipeSearchCondAndKeywordDto recipeSearchCond);
+	Page<RecipeSearchResponseDto> findAllThroughSearch(Pageable pageable,
+		RecipeSearchCondAndKeywordDto recipeSearchCond);
 }
