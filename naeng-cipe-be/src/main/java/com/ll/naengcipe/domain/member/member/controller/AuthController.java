@@ -37,6 +37,7 @@ public class AuthController {
 	 */
 	@PostMapping("/join")
 	public ResponseEntity<MemberResponseDto> memberAdd(@Valid @RequestBody JoinRequestDto joinDto) {
+
 		if (!joinDto.isPasswordCheck()) {
 			throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
 		}

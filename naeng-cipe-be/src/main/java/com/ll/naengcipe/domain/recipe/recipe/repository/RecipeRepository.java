@@ -1,5 +1,7 @@
 package com.ll.naengcipe.domain.recipe.recipe.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -13,4 +15,11 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>, RecipeRep
 	@EntityGraph(attributePaths = "member") //member 페치조인
 	@Query("select r from Recipe r")
 	public Page<Recipe> findAllWithMember(Pageable pageable);
+
+	@Query("select r from Recipe r left join fetch r.recipeIngredient ri where r.id = :recipeId")
+	Optional<Recipe> findByIdWithRecipeIngredient(Long recipeId);
+
+	@EntityGraph(attributePaths = "member")
+	@Query("select r from Recipe r where r.id = :recipeId")
+	Recipe findByIdWithMember(Long recipeId);
 }

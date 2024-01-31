@@ -9,6 +9,7 @@ import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 
 public interface RecipeRepositoryCustom {
+
 	List<RecipeSearchResponseDto> findRecipesByIngredients(List<Long> ingredients);
 
 	Page<RecipeSearchResponseDto> findAllThroughSearch(Pageable pageable,
