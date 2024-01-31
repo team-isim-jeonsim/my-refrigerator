@@ -1,10 +1,7 @@
 package com.ll.naengcipe.domain.fridge.fridge.entity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
@@ -19,11 +16,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
