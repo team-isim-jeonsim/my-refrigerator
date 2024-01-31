@@ -57,6 +57,21 @@ public class AuthControllerAdvice {
 			);
 	}
 
+	/**
+	 * 커스텀 예외 처리
+	 * 레시피 수정 및 삭제, 요청 사용자와 작성자가 다른 경우 예외처리
+	 */
+	@ExceptionHandler(UserAndWriterNotMatchException.class)
+	public ResponseEntity<ErrorResponseDto> handleUserAndWriterNotMatchExceptions(UserAndWriterNotMatchException ex) {
+		return ResponseEntity.badRequest()
+			.body(common(
+					HttpStatus.FORBIDDEN.value(),
+					ex.getMessage(),
+					ex.getClass().getName()
+				)
+			);
+	}
+
 	public ErrorResponseDto common(int status, String message, String type) {
 		return ErrorResponseDto.builder()
 			.status(status)

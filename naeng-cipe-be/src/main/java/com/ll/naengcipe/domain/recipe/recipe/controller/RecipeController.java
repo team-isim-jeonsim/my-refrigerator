@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
