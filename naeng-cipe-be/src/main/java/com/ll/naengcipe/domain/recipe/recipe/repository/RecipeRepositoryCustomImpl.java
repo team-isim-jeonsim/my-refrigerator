@@ -33,4 +33,5 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 			.having(recipeIngredient.ingredient.id.countDistinct().eq((long)ingredients.size()))
 			.fetch();
 	}
+
 }
