@@ -34,4 +34,11 @@ public class RecipeIngredient {
 	@JoinColumn(name = "ingredient_id")
 	private Ingredient ingredient;
 
+	public RecipeIngredient(Ingredient ingredient) {
+		this.ingredient = ingredient;
+	}
+
+	public void addRecipe(Recipe recipe) {
+		this.recipe = recipe;
+	}
 }
