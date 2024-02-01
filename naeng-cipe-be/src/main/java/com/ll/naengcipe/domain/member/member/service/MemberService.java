@@ -10,14 +10,13 @@ import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.entity.FridgeIngredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
 import com.ll.naengcipe.domain.member.member.dto.MyFridgeResponseDto;
 import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.member.member.exception.UserNotFoundException;
 import com.ll.naengcipe.domain.member.member.repository.MemberRepository;
-
-import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
-import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
 
 import lombok.RequiredArgsConstructor;

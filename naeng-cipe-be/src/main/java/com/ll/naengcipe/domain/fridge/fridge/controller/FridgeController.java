@@ -2,6 +2,7 @@ package com.ll.naengcipe.domain.fridge.fridge.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.naengcipe.domain.fridge.fridge.dto.FridgeResponseDto;
 import com.ll.naengcipe.domain.fridge.fridge.service.FridgeService;
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientDto;
-import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.service.IngredientService;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
@@ -39,14 +39,9 @@ public class FridgeController {
 	}
 
 	@PostMapping("/ingredients/{ingredientId}")
-	public FridgeResponseDto addIngredient(@PathVariable("ingredientId") Long id,
+	public ResponseEntity<FridgeResponseDto> addIngredient(@PathVariable("ingredientId") Long id,
 		@AuthenticationPrincipal UserPrincipal user) {
-
-		fridgeService.addIngredient(id, user.getMember().getId());
-
-		Ingredient ingredient = ingredientService.findById(id).get();
-
-		return new FridgeResponseDto(user.getMember().getId(), ingredient.getId(), ingredient.getName());
+		return ResponseEntity.ok(fridgeService.addIngredient(id, user.getMember().getId()));
 	}
 
 	@DeleteMapping("/ingredients/{ingredientId}") // 데이터베이스에 있는 재료 삭제
