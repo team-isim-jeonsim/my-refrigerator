@@ -3,11 +3,12 @@ package com.ll.naengcipe.domain.member.member.service;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
+import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeRepository;
 import com.ll.naengcipe.domain.member.member.dto.JoinRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.LoginRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberDto;
@@ -31,14 +32,17 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+
 	private final AuthenticationManager authenticationManager;
+
 	private final JwtTokenProvider jwtTokenProvider;
 	private final JwtRefreshTokenRepository refreshTokenRepository;
+
+	private final FridgeRepository fridgeRepository;
 
 	/**
 	 * 회원가입
 	 */
-
 	@Transactional
 	public MemberResponseDto addMember(final JoinRequestDto joinDto) {
 		MemberDto memberDto = MemberDto.builder()
@@ -49,7 +53,13 @@ public class AuthService {
 
 		Member memberEntity = memberRepository.save(MemberDto.toEntity(memberDto));
 
-		return new MemberResponseDto(new MemberDto(memberEntity));
+		Fridge fridgeEntity = Fridge.builder()
+			.member(memberEntity)
+			.build();
+
+		fridgeRepository.save(fridgeEntity);
+
+		return MemberResponseDto.of(new MemberDto(memberEntity));
 	}
 
 	/**
@@ -63,7 +73,6 @@ public class AuthService {
 			.build();
 
 		Authentication authentication = authenticateMember(memberEntity);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		JwtResponse jwtResponse = jwtTokenProvider.createAccessToken(authentication);
 		JwtRefreshToken refreshToken = checkAndCreateRefreshToken(authentication);
@@ -152,7 +161,7 @@ public class AuthService {
 		final JwtResponse jwtResponse) {
 		return jwtResponse.toBuilder()
 			.refreshToken(refreshToken.getRefreshToken())
-			.member(new MemberResponseDto(new MemberDto(member)))
+			.member(MemberResponseDto.of(new MemberDto(member)))
 			.build();
 	}
 

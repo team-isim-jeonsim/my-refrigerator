@@ -25,6 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 	private final AuthService authService;
 
+	/**
+	 * 로그인
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> memberLogin(@Valid @RequestBody LoginRequestDto loginDto) {
 		return ResponseEntity.ok(
@@ -33,11 +36,19 @@ public class AuthController {
 	}
 
 	/**
+	 * 액세스 토큰 재발급
+	 */
+	@PostMapping("/token/reissue")
+	public ResponseEntity<?> reissueAccessToken(@RequestBody String refreshToken) {
+		log.info("refreshToken controller : {}", refreshToken);
+		return ResponseEntity.ok(authService.newAccessToken(refreshToken));
+	}
+
+	/**
 	 * 회원가입
 	 */
 	@PostMapping("/join")
 	public ResponseEntity<MemberResponseDto> memberAdd(@Valid @RequestBody JoinRequestDto joinDto) {
-
 		if (!joinDto.isPasswordCheck()) {
 			throw new PasswordNotMatchException("비밀번호가 일치하지 않습니다.");
 		}
