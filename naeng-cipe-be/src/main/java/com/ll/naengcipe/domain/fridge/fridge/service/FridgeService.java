@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ll.naengcipe.domain.fridge.fridge.dto.FridgeResponseDto;
 import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
-import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeIngredientRepository;
 import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeRepository;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
@@ -34,7 +34,7 @@ public class FridgeService {
 	}
 
 	@Transactional
-	public void addIngredient(Long ingredientId, Long userId) {
+	public FridgeResponseDto addIngredient(Long ingredientId, Long userId) {
 		// 재료 찾기
 		Ingredient ingredient = ingredientRepository.findById(ingredientId)
 			.orElseThrow(() -> new NoSuchElementException("해당 재료가 존재하지 않습니다."));
@@ -43,6 +43,8 @@ public class FridgeService {
 		Fridge userFridge = findByUserId(userId);
 
 		userFridge.addIngredient(ingredient);
+
+		return new FridgeResponseDto(userId, ingredient.getId(), ingredient.getName());
 	}
 
 	@Transactional

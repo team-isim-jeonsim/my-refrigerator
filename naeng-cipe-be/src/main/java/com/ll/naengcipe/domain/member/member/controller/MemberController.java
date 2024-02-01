@@ -4,18 +4,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.service.FridgeService;
-import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import com.ll.naengcipe.domain.member.member.dto.MemberDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
 import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.member.member.service.MemberService;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
@@ -44,14 +43,14 @@ public class MemberController {
 	}
 
 	@GetMapping("/{memberId}")
-	public MemberDto memberDetails(@AuthenticationPrincipal UserPrincipal user) {
+	public ResponseEntity<MemberDto> memberDetails(@AuthenticationPrincipal UserPrincipal user) {
 		Member member = user.getMember();
-		return new MemberDto(member);
+		return ResponseEntity.ok(memberService.findMemberInfo(member));
 	}
 
 	@PatchMapping("/{memberId}")
-	public MemberModifyResponseDto memberModify(@AuthenticationPrincipal UserPrincipal user,
+	public ResponseEntity<MemberModifyResponseDto> memberModify(@AuthenticationPrincipal UserPrincipal user,
 		@RequestBody MemberModifyRequestDto memberModifyRequestDto) {
-		return memberService.modifyMember(user, memberModifyRequestDto);
+		return ResponseEntity.ok(memberService.modifyMember(user, memberModifyRequestDto));
 	}
 }
