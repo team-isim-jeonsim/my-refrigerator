@@ -67,8 +67,4 @@ public class MemberService {
 
 		return responseDto;
 	}
-
-	public MemberDto findMemberInfo(Member member) {
-		return new MemberDto(member);
-	}
 }

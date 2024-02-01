@@ -45,7 +45,7 @@ public class MemberController {
 	@GetMapping("/{memberId}")
 	public ResponseEntity<MemberDto> memberDetails(@AuthenticationPrincipal UserPrincipal user) {
 		Member member = user.getMember();
-		return ResponseEntity.ok(memberService.findMemberInfo(member));
+		return ResponseEntity.ok(new MemberDto(member));
 	}
 
 	@PatchMapping("/{memberId}")
