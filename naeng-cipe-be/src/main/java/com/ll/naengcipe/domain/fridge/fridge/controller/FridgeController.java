@@ -54,8 +54,6 @@ public class FridgeController {
 	@GetMapping("/recipes")
 	public List<RecipeSearchResponseDto> fridgeRecipeList(@RequestParam("ingredient") List<Long> ingredients) {
 
-		//Todo: 해당 재료가 없는 경우, 예외 처리
-
 		return fridgeService.findRecipesContainIngredients(ingredients);
 	}
 }
