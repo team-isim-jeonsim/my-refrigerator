@@ -2,6 +2,7 @@ package com.ll.naengcipe.domain.member.member.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,12 +46,14 @@ public class MemberController {
 		return ResponseEntity.ok(memberService.findMyFridge(fridgeEntity));
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/{memberId}")
 	public ResponseEntity<MemberDto> memberDetails(@AuthenticationPrincipal UserPrincipal user) {
 		Member member = user.getMember();
 		return ResponseEntity.ok(new MemberDto(member));
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@PatchMapping("/{memberId}")
 	public ResponseEntity<MemberModifyResponseDto> memberModify(@AuthenticationPrincipal UserPrincipal user,
 		@RequestBody MemberModifyRequestDto memberModifyRequestDto) {

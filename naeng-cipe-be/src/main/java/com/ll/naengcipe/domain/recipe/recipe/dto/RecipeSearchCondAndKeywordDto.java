@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class RecipeSearchCondAndKeywordDto {
+
 	private RecipeSearchCond cond;
 	private String keyword;
 
