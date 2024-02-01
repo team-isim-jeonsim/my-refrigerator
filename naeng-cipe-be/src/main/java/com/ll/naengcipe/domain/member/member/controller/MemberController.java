@@ -5,6 +5,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import com.ll.naengcipe.domain.member.member.dto.MemberDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
+import com.ll.naengcipe.domain.member.member.dto.MyFridgeResponseDto;
 import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.member.member.service.MemberService;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
@@ -31,7 +33,8 @@ public class MemberController {
 	private final FridgeService fridgeService;
 
 	@GetMapping("/{memberId}/fridge")
-	public ResponseEntity<?> myFridge(@AuthenticationPrincipal UserPrincipal user) {
+	public ResponseEntity<MyFridgeResponseDto> myFridge(@AuthenticationPrincipal UserPrincipal user,
+		@PathVariable String memberId) {
 		if (user == null || user.getUsername().isEmpty()) {
 			throw new AccessDeniedException("로그인이 필요한 서비스입니다.");
 		}
