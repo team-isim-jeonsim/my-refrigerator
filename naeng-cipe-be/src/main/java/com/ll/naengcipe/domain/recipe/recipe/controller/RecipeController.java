@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
@@ -67,8 +65,7 @@ public class RecipeController {
 		return ResponseEntity.ok(null);
 	}
 
-
-	@GetMapping("/api/recipes/{recipeId}")
+	@GetMapping("/{recipeId}")
 	public ResponseEntity<RecipeInfoResponseDto> recipeDetails(@PathVariable Long recipeId) {
 		return ResponseEntity.status(HttpStatus.OK).body(recipeService.findRecipe(recipeId));
 	}
