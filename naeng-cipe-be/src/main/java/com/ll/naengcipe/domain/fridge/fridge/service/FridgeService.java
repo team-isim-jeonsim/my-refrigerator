@@ -10,6 +10,7 @@ import com.ll.naengcipe.domain.fridge.fridge.dto.FridgeResponseDto;
 import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeRepository;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
+import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
@@ -59,7 +60,21 @@ public class FridgeService {
 		userFridge.removeIngredient(ingredient);
 	}
 
-	public List<RecipeSearchResponseDto> findRecipesContainIngredients(List<Long> ingredients) {
-		return recipeRepository.findRecipesByIngredients(ingredients);
+	public List<RecipeSearchResponseDto> findRecipesContainIngredients(List<Long> ingredientIds) {
+
+		// 재료 찾기
+		List<Ingredient> ingredients = ingredientRepository.findByIdIn(ingredientIds);
+		//recipeCreateDto의 재료가 DB에 없으면 예외처리
+		if (ingredientNotExist(ingredientIds.size(), ingredients.size())) {
+			throw new IngredientNotExistException("해당 재료가 존재하지 않습니다.");
+		}
+
+		return recipeRepository.findRecipesByIngredients(ingredientIds);
+	}
+
+	private boolean
+	ingredientNotExist(int requestIngredientSize, int size) {
+
+		return size != requestIngredientSize;
 	}
 }

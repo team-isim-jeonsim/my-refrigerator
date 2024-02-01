@@ -52,14 +52,14 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 		RecipeSearchCondAndKeywordDto recipeSearchCond) {
 
 		BooleanBuilder booleanBuilder = new BooleanBuilder();
-		if (recipeSearchCond.getCond() != null && StringUtils.hasText(recipeSearchCond.getKeyword())) {
-			RecipeSearchCond cond = recipeSearchCond.getCond();
+		if (StringUtils.hasText(recipeSearchCond.getCond()) && StringUtils.hasText(recipeSearchCond.getKeyword())) {
+			String cond = recipeSearchCond.getCond();
 			String keyword = recipeSearchCond.getKeyword();
-			if (cond.equals(RecipeSearchCond.TITLE)) {
+			if (cond.equalsIgnoreCase(RecipeSearchCond.TITLE.getValue())) {
 				booleanBuilder.and(recipe.title.contains(keyword));
-			} else if (cond.equals(RecipeSearchCond.BODY)) {
+			} else if (cond.equalsIgnoreCase(RecipeSearchCond.BODY.getValue())) {
 				booleanBuilder.and(recipe.content.contains(keyword));
-			} else if (cond.equals(RecipeSearchCond.TNB)) {
+			} else if (cond.equalsIgnoreCase(RecipeSearchCond.TNB.getValue())) {
 				booleanBuilder.and(recipe.title.contains(keyword).or(recipe.content.contains(keyword)));
 			}
 		}

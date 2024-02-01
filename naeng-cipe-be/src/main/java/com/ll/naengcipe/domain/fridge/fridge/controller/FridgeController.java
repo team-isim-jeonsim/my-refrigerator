@@ -3,6 +3,7 @@ package com.ll.naengcipe.domain.fridge.fridge.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class FridgeController {
 	private final FridgeService fridgeService;
 	private final IngredientService ingredientService;
 
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/ingredients")
 	public List<IngredientDto> ingredientList() {
 		return ingredientService.findIngredient()
@@ -38,12 +40,14 @@ public class FridgeController {
 			.toList();
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/ingredients/{ingredientId}")
 	public ResponseEntity<FridgeResponseDto> addIngredient(@PathVariable("ingredientId") Long id,
 		@AuthenticationPrincipal UserPrincipal user) {
 		return ResponseEntity.ok(fridgeService.addIngredient(id, user.getMember().getId()));
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@DeleteMapping("/ingredients/{ingredientId}") // 데이터베이스에 있는 재료 삭제
 	public void removeIngredient(@PathVariable("ingredientId") Long id,
 		@AuthenticationPrincipal UserPrincipal user) {
@@ -51,10 +55,9 @@ public class FridgeController {
 		fridgeService.removeIngredient(id, user.getMember().getId());
 	}
 
+	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/recipes")
 	public List<RecipeSearchResponseDto> fridgeRecipeList(@RequestParam("ingredient") List<Long> ingredients) {
-
-		//Todo: 해당 재료가 없는 경우, 예외 처리
 
 		return fridgeService.findRecipesContainIngredients(ingredients);
 	}

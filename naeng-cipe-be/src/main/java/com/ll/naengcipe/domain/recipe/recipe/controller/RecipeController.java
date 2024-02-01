@@ -26,11 +26,14 @@ import com.ll.naengcipe.domain.recipe.recipe.exception.KeywordIsBlankException;
 import com.ll.naengcipe.domain.recipe.recipe.service.RecipeService;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/recipes")
+@Slf4j
 public class RecipeController {
 
 	private final RecipeService recipeService;
@@ -72,9 +75,7 @@ public class RecipeController {
 
 	@GetMapping
 	public ResponseEntity<Page<RecipeSearchResponseDto>> recipeList(Pageable pageable,
-		RecipeSearchCondAndKeywordDto recipeSearchDto) {
-
-		//지정된 형식으로 cond를 보내지 않으면 MethodArgumentNotValidException 발생
+		@Valid RecipeSearchCondAndKeywordDto recipeSearchDto) {
 
 		//cond는 있는데 keyword는 공백인 경우에 예외처리
 		if (recipeSearchDto.getCond() != null && recipeSearchDto.isKeywordBlank()) {
