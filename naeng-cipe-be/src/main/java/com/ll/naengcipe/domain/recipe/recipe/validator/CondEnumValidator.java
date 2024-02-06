@@ -1,5 +1,7 @@
 package com.ll.naengcipe.domain.recipe.recipe.validator;
 
+import org.springframework.util.StringUtils;
+
 import com.ll.naengcipe.domain.recipe.recipe.annotation.CondEnum;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCond;
 
@@ -15,7 +17,9 @@ public class CondEnumValidator implements ConstraintValidator<CondEnum, String> 
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-
-		return RecipeSearchCond.isCorrectSearchCond(value);
+		if (StringUtils.hasText(value)) {
+			return RecipeSearchCond.isCorrectSearchCond(value);
+		}
+		return true;
 	}
 }
