@@ -27,10 +27,10 @@ public class Image extends BaseEntity {
 	private Long id;
 
 	@Column(nullable = false)
-	private String key_name;
+	private String key_name; //디렉토리 + 내가 지정한 파일 이름
 
 	@Column(nullable = false)
-	private String image_name;
+	private String image_name; //내가 지정한 파일 이름
 
 	@Column(nullable = false)
 	private String url;

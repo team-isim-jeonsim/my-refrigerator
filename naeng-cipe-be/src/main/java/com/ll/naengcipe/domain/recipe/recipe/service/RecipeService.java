@@ -4,21 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
-import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
-
-import lombok.RequiredArgsConstructor;
-
+import com.ll.naengcipe.domain.image.image.entity.Image;
+import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
@@ -27,6 +19,8 @@ import com.ll.naengcipe.domain.member.member.exception.UserAndWriterNotMatchExce
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.entity.Recipe;
@@ -34,6 +28,7 @@ import com.ll.naengcipe.domain.recipe.recipe.entity.RecipeIngredient;
 import com.ll.naengcipe.domain.recipe.recipe.exception.RecipeNotFoundException;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeIngredientRepository;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
+import com.ll.naengcipe.global.service.FileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +42,7 @@ public class RecipeService {
 	private final RecipeRepository recipeRepository;
 	private final RecipeIngredientRepository recipeIngredientRepository;
 	private final IngredientRepository ingredientRepository;
+	private final FileService fileService;
 
 	@Transactional
 	public RecipeCreateResponseDto addRecipe(Member member, RecipeCreateRequestDto recipeCreateDto) {
@@ -64,6 +60,11 @@ public class RecipeService {
 		Recipe recipe = Recipe.createRecipe(member, recipeCreateDto.getTitle(), recipeCreateDto.getContent(),
 			recipeIngredients);
 		Recipe savedRecipe = recipeRepository.save(recipe);
+
+		//이미지가 있는 경우, 이미지 저장
+		if (recipeCreateDto.getImages() != null) {
+			List<Image> images = fileService.uploadImage(recipeCreateDto.getImages());
+		}
 
 		return RecipeCreateResponseDto.toDto(savedRecipe);
 	}

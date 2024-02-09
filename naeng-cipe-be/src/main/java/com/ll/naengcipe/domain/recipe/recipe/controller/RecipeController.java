@@ -1,8 +1,5 @@
 package com.ll.naengcipe.domain.recipe.recipe.controller;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,11 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
@@ -46,11 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RecipeController {
 
 	private final RecipeService recipeService;
-
-	private final AmazonS3 amazonS3;
-
-	@Value("${aws.s3.bucket}")
-	private String bucket;
 
 	/*@PreAuthorize("isAuthenticated()")
 	@PostMapping
@@ -104,24 +92,6 @@ public class RecipeController {
 	public ResponseEntity<?> recipeAddWithImage(
 		@AuthenticationPrincipal UserPrincipal user,
 		@ModelAttribute RecipeCreateRequestDto recipeCreateDto) {
-
-		log.info("recipeCreateDto={}", recipeCreateDto);
-
-		for (MultipartFile multipartFile : recipeCreateDto.getImages()) {
-			String originalFilename = multipartFile.getOriginalFilename();
-
-			ObjectMetadata metadata = new ObjectMetadata();
-			metadata.setContentLength(multipartFile.getSize());
-			metadata.setContentType(multipartFile.getContentType());
-
-			try {
-				amazonS3.putObject(
-					new PutObjectRequest(bucket, originalFilename, multipartFile.getInputStream(), metadata));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-
-		}
 
 		RecipeCreateResponseDto recipeResponseDto = recipeService.addRecipe(user.getMember(), recipeCreateDto);
 		return
