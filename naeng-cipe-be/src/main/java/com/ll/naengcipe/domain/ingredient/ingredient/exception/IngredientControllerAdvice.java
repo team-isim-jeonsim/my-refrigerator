@@ -22,6 +22,18 @@ public class IngredientControllerAdvice {
 			);
 	}
 
+	@ExceptionHandler(IngredientNotUniqueException.class)
+	public ResponseEntity<ErrorResponseDto> handleIngredientNotUniqueException(IngredientNotUniqueException ex) {
+		return ResponseEntity.badRequest()
+			.body(
+				createErrorResponseDto(
+					HttpStatus.BAD_REQUEST.value(),
+					ex.getMessage(),
+					ex.getClass().getName()
+				)
+			);
+	}
+
 	public ErrorResponseDto createErrorResponseDto(int status, String message, String type) {
 		return ErrorResponseDto.builder()
 			.status(status)

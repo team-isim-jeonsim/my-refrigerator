@@ -10,5 +10,7 @@ import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
 
+	boolean existsByName(String ingredientName);
+
 	List<Ingredient> findByIdIn(List<Long> ingredientIds);
 }

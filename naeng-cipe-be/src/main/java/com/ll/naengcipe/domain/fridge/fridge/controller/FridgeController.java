@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ll.naengcipe.domain.fridge.fridge.dto.FridgeResponseDto;
 import com.ll.naengcipe.domain.fridge.fridge.service.FridgeService;
-import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientDto;
 import com.ll.naengcipe.domain.ingredient.ingredient.service.IngredientService;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
@@ -30,15 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 public class FridgeController {
 	private final FridgeService fridgeService;
 	private final IngredientService ingredientService;
-
-	@PreAuthorize("isAuthenticated()")
-	@GetMapping("/ingredients")
-	public List<IngredientDto> ingredientList() {
-		return ingredientService.findIngredient()
-			.stream()
-			.map(ingredient -> new IngredientDto(ingredient))
-			.toList();
-	}
 
 	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/ingredients/{ingredientId}")
@@ -57,8 +47,9 @@ public class FridgeController {
 
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/recipes")
-	public List<RecipeSearchResponseDto> fridgeRecipeList(@RequestParam("ingredient") List<Long> ingredients) {
+	public ResponseEntity<List<RecipeSearchResponseDto>> fridgeRecipeList(
+		@RequestParam("ingredient") List<Long> ingredients) {
 
-		return fridgeService.findRecipesContainIngredients(ingredients);
+		return ResponseEntity.ok(fridgeService.findRecipesContainIngredients(ingredients));
 	}
 }
