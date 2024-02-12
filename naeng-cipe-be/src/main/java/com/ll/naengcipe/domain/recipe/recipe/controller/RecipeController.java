@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
@@ -28,11 +26,14 @@ import com.ll.naengcipe.domain.recipe.recipe.exception.KeywordIsBlankException;
 import com.ll.naengcipe.domain.recipe.recipe.service.RecipeService;
 import com.ll.naengcipe.global.security.authentiation.UserPrincipal;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/recipes")
+@Slf4j
 public class RecipeController {
 
 	private final RecipeService recipeService;
@@ -67,17 +68,14 @@ public class RecipeController {
 		return ResponseEntity.ok(null);
 	}
 
-
-	@GetMapping("/api/recipes/{recipeId}")
+	@GetMapping("/{recipeId}")
 	public ResponseEntity<RecipeInfoResponseDto> recipeDetails(@PathVariable Long recipeId) {
 		return ResponseEntity.status(HttpStatus.OK).body(recipeService.findRecipe(recipeId));
 	}
 
 	@GetMapping
 	public ResponseEntity<Page<RecipeSearchResponseDto>> recipeList(Pageable pageable,
-		RecipeSearchCondAndKeywordDto recipeSearchDto) {
-
-		//지정된 형식으로 cond를 보내지 않으면 MethodArgumentNotValidException 발생
+		@Valid RecipeSearchCondAndKeywordDto recipeSearchDto) {
 
 		//cond는 있는데 keyword는 공백인 경우에 예외처리
 		if (recipeSearchDto.getCond() != null && recipeSearchDto.isKeywordBlank()) {

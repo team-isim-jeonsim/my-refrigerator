@@ -39,7 +39,7 @@ public class AuthController {
 	 * 액세스 토큰 재발급
 	 */
 	@PostMapping("/token/reissue")
-	public ResponseEntity<?> reissueAccessToken(@RequestBody String refreshToken) {
+	public ResponseEntity<JwtResponse> reissueAccessToken(@RequestBody String refreshToken) {
 		log.info("refreshToken controller : {}", refreshToken);
 		return ResponseEntity.ok(authService.newAccessToken(refreshToken));
 	}
