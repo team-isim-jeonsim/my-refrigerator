@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.entity.FridgeIngredient;
-import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientDto;
+import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
@@ -34,10 +34,10 @@ public class MemberService {
 	}
 
 	public MyFridgeResponseDto findMyFridge(final Fridge fridge) {
-		Set<IngredientDto> ingredientDtos = new HashSet<>();
+		Set<IngredientResponseDto> ingredientDtos = new HashSet<>();
 
 		for (FridgeIngredient fridgeIngredient : fridge.getFridgeIngredients()) {
-			ingredientDtos.add(new IngredientDto(fridgeIngredient.getIngredient()));
+			ingredientDtos.add(IngredientResponseDto.toDto(fridgeIngredient.getIngredient()));
 		}
 
 		return MyFridgeResponseDto.builder()
