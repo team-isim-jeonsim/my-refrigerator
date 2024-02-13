@@ -147,13 +147,18 @@ public class RecipeService {
 		recipeInfoResponseDto.setCreatedDate(recipe.getCreatedDate());
 		recipeInfoResponseDto.setUpdateDate(recipe.getUpdatedDate());
 
+		List<Image> images = imageRepository.findByRecipeId(recipeId);
+		if (images != null) {
+			recipeInfoResponseDto.addImages(images);
+		}
+
 		return recipeInfoResponseDto;
 	}
 
 	public Page<RecipeSearchResponseDto> findRecipeList(Pageable pageable, RecipeSearchCondAndKeywordDto
 		recipeSearchDto) {
 		Page<RecipeSearchResponseDto> recipeDtos = recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
-		
+
 		//DTO에 이미지 등록
 		//TODO: 레시피 개수만큼 이미지 조회 쿼리를 전달하는 문제 해결
 		for (RecipeSearchResponseDto recipeDto : recipeDtos.getContent()) {
