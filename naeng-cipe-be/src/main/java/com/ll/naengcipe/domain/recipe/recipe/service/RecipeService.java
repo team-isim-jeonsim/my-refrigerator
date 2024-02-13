@@ -63,9 +63,10 @@ public class RecipeService {
 			recipeIngredients);
 		Recipe savedRecipe = recipeRepository.save(recipe);
 
+		List<Image> images = null;
 		//이미지가 있는 경우, 이미지 저장
 		if (recipeCreateDto.getImages() != null) {
-			List<Image> images = fileService.uploadImage(recipeCreateDto.getImages());
+			images = fileService.uploadImage(recipeCreateDto.getImages());
 			images.forEach(i -> {
 				i.addRecipe(savedRecipe);
 				imageRepository.save(i);
@@ -73,7 +74,7 @@ public class RecipeService {
 
 		}
 
-		return RecipeCreateResponseDto.toDto(savedRecipe);
+		return RecipeCreateResponseDto.toDto(savedRecipe, images);
 	}
 
 	@Transactional
