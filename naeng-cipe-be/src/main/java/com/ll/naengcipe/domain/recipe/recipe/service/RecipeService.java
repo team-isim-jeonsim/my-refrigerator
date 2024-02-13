@@ -152,6 +152,17 @@ public class RecipeService {
 
 	public Page<RecipeSearchResponseDto> findRecipeList(Pageable pageable, RecipeSearchCondAndKeywordDto
 		recipeSearchDto) {
-		return recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
+		Page<RecipeSearchResponseDto> recipeDtos = recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
+		
+		//DTO에 이미지 등록
+		//TODO: 레시피 개수만큼 이미지 조회 쿼리를 전달하는 문제 해결
+		for (RecipeSearchResponseDto recipeDto : recipeDtos.getContent()) {
+			Image image = imageRepository.findFirstByRecipeId(recipeDto.getId());
+			if (image != null) {
+				recipeDto.setThumbnail(image.getUrl());
+			}
+		}
+
+		return recipeDtos;
 	}
 }

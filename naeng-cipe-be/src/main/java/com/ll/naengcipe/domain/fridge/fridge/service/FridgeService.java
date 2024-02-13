@@ -11,6 +11,8 @@ import com.ll.naengcipe.domain.fridge.fridge.entity.Fridge;
 import com.ll.naengcipe.domain.fridge.fridge.entity.FridgeIngredient;
 import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeIngredientRepository;
 import com.ll.naengcipe.domain.fridge.fridge.repository.FridgeRepository;
+import com.ll.naengcipe.domain.image.image.entity.Image;
+import com.ll.naengcipe.domain.image.image.repository.ImageRepository;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
@@ -28,6 +30,7 @@ public class FridgeService {
 	private final FridgeRepository fridgeRepository;
 	private final IngredientRepository ingredientRepository;
 	private final FridgeIngredientRepository fridgeIngredientRepository;
+	private final ImageRepository imageRepository;
 
 	public Fridge findByUserId(Long id) {
 		return fridgeRepository.findByMemberId(id);
@@ -72,7 +75,18 @@ public class FridgeService {
 			throw new IngredientNotExistException("해당 재료가 존재하지 않습니다.");
 		}
 
-		return recipeRepository.findRecipesByIngredients(ingredientIds);
+		List<RecipeSearchResponseDto> recipeSearchDtos = recipeRepository.findRecipesByIngredients(ingredientIds);
+
+		//DTO에 이미지 등록
+		//TODO: 레시피 개수만큼 이미지 조회 쿼리를 전달하는 문제 해결
+		for (RecipeSearchResponseDto recipeDto : recipeSearchDtos) {
+			Image image = imageRepository.findFirstByRecipeId(recipeDto.getId());
+			if (image != null) {
+				recipeDto.setThumbnail(image.getUrl());
+			}
+		}
+
+		return recipeSearchDtos;
 	}
 
 	private boolean

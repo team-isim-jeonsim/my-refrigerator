@@ -16,7 +16,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ll.naengcipe.domain.image.image.entity.Image;
-import com.ll.naengcipe.domain.image.image.repository.ImageRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class FileService {
 
 	private final AmazonS3 amazonS3;
-	private final ImageRepository imageRepository;
 
 	@Value("${aws.s3.bucket}")
 	private String bucket;
