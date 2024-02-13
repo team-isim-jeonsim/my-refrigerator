@@ -17,6 +17,7 @@ import com.ll.naengcipe.domain.member.member.dto.MemberDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyRequestDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberModifyResponseDto;
 import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
+import com.ll.naengcipe.domain.member.member.dto.MemberResponseDto;
 import com.ll.naengcipe.domain.member.member.dto.MyFridgeResponseDto;
 import com.ll.naengcipe.domain.member.member.entity.Member;
 import com.ll.naengcipe.domain.member.member.service.MemberService;
