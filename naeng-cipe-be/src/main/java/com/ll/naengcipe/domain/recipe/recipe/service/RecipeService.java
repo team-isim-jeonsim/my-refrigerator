@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ll.naengcipe.domain.image.image.entity.Image;
+import com.ll.naengcipe.domain.image.image.repository.ImageRepository;
 import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
@@ -42,6 +43,7 @@ public class RecipeService {
 	private final RecipeRepository recipeRepository;
 	private final RecipeIngredientRepository recipeIngredientRepository;
 	private final IngredientRepository ingredientRepository;
+	private final ImageRepository imageRepository;
 	private final FileService fileService;
 
 	@Transactional
@@ -64,6 +66,11 @@ public class RecipeService {
 		//이미지가 있는 경우, 이미지 저장
 		if (recipeCreateDto.getImages() != null) {
 			List<Image> images = fileService.uploadImage(recipeCreateDto.getImages());
+			images.forEach(i -> {
+				i.addRecipe(savedRecipe);
+				imageRepository.save(i);
+			});
+
 		}
 
 		return RecipeCreateResponseDto.toDto(savedRecipe);

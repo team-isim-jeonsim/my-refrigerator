@@ -52,6 +52,15 @@ public class FileService {
 					new PutObjectRequest(bucket, keyName, multipartFile.getInputStream(), metadata));
 				String imageUrl = amazonS3.getUrl(bucket, keyName).toString();
 
+				Image image = Image.builder()
+					.keyName(keyName)
+					.imageName(imageName)
+					.url(imageUrl)
+					.size(multipartFile.getSize())
+					.build();
+
+				images.add(image);
+
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
