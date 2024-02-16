@@ -27,10 +27,10 @@ public class Image extends BaseEntity {
 	private Long id;
 
 	@Column(nullable = false)
-	private String key_name;
+	private String keyName; //디렉토리 + 내가 지정한 파일 이름
 
 	@Column(nullable = false)
-	private String image_name;
+	private String imageName; //내가 지정한 파일 이름
 
 	@Column(nullable = false)
 	private String url;
@@ -40,4 +40,8 @@ public class Image extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recipe_id")
 	private Recipe recipe;
+
+	public void addRecipe(Recipe recipe) {
+		this.recipe = recipe;
+	}
 }

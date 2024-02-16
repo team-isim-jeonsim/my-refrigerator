@@ -4,21 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
-import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
-import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
-
-import lombok.RequiredArgsConstructor;
-
+import com.ll.naengcipe.domain.image.image.entity.Image;
+import com.ll.naengcipe.domain.image.image.repository.ImageRepository;
+import com.ll.naengcipe.domain.ingredient.ingredient.dto.IngredientResponseDto;
 import com.ll.naengcipe.domain.ingredient.ingredient.entity.Ingredient;
 import com.ll.naengcipe.domain.ingredient.ingredient.exception.IngredientNotExistException;
 import com.ll.naengcipe.domain.ingredient.ingredient.repository.IngredientRepository;
@@ -27,6 +20,8 @@ import com.ll.naengcipe.domain.member.member.exception.UserAndWriterNotMatchExce
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeCreateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeInfoResponseDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchCondAndKeywordDto;
+import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeSearchResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateRequestDto;
 import com.ll.naengcipe.domain.recipe.recipe.dto.RecipeUpdateResponseDto;
 import com.ll.naengcipe.domain.recipe.recipe.entity.Recipe;
@@ -34,6 +29,7 @@ import com.ll.naengcipe.domain.recipe.recipe.entity.RecipeIngredient;
 import com.ll.naengcipe.domain.recipe.recipe.exception.RecipeNotFoundException;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeIngredientRepository;
 import com.ll.naengcipe.domain.recipe.recipe.repository.RecipeRepository;
+import com.ll.naengcipe.global.service.FileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +43,8 @@ public class RecipeService {
 	private final RecipeRepository recipeRepository;
 	private final RecipeIngredientRepository recipeIngredientRepository;
 	private final IngredientRepository ingredientRepository;
+	private final ImageRepository imageRepository;
+	private final FileService fileService;
 
 	@Transactional
 	public RecipeCreateResponseDto addRecipe(Member member, RecipeCreateRequestDto recipeCreateDto) {
@@ -65,7 +63,18 @@ public class RecipeService {
 			recipeIngredients);
 		Recipe savedRecipe = recipeRepository.save(recipe);
 
-		return RecipeCreateResponseDto.toDto(savedRecipe);
+		List<Image> images = null;
+		//이미지가 있는 경우, 이미지 저장
+		if (recipeCreateDto.getImages() != null) {
+			images = fileService.uploadImage(recipeCreateDto.getImages());
+			images.forEach(i -> {
+				i.addRecipe(savedRecipe);
+				imageRepository.save(i);
+			});
+
+		}
+
+		return RecipeCreateResponseDto.toDto(savedRecipe, images);
 	}
 
 	@Transactional
@@ -138,11 +147,27 @@ public class RecipeService {
 		recipeInfoResponseDto.setCreatedDate(recipe.getCreatedDate());
 		recipeInfoResponseDto.setUpdateDate(recipe.getUpdatedDate());
 
+		List<Image> images = imageRepository.findByRecipeId(recipeId);
+		if (images != null) {
+			recipeInfoResponseDto.addImages(images);
+		}
+
 		return recipeInfoResponseDto;
 	}
 
 	public Page<RecipeSearchResponseDto> findRecipeList(Pageable pageable, RecipeSearchCondAndKeywordDto
 		recipeSearchDto) {
-		return recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
+		Page<RecipeSearchResponseDto> recipeDtos = recipeRepository.findAllThroughSearch(pageable, recipeSearchDto);
+
+		//DTO에 이미지 등록
+		//TODO: 레시피 개수만큼 이미지 조회 쿼리를 전달하는 문제 해결
+		for (RecipeSearchResponseDto recipeDto : recipeDtos.getContent()) {
+			Image image = imageRepository.findFirstByRecipeId(recipeDto.getId());
+			if (image != null) {
+				recipeDto.setThumbnail(image.getUrl());
+			}
+		}
+
+		return recipeDtos;
 	}
 }
